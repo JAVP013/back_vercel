@@ -1,21 +1,12 @@
-// src/server.ts
-// import express, { Application, Request, Response, NextFunction }// from "express";
-// import cors// from "cors";
-// import dotenv// from "dotenv";
-// import mongoose// from "mongoose";
-
-// Importa las rutas (asegúrate de que los archivos existan en las rutas indicadas)
-// import emailRoutes// from "./routes/email.routes";
-// import storeLocationRoutes// from "./routes/storeLocation.routes";
-// import phoneRoutes// from "./routes/phones.routes";
-// import brandRoutes// from "./routes/brand.routes";
-// import carouselRoutes// from "./routes/carousel.routes";
-// import companyRoutes// from "./routes/company.routes";
-// import adminRoutes// from "./routes/admin.routes";
-
+const express = require('express');
+const cors = require('cors');
+const dotenv = require('dotenv');
 dotenv.config();
 
-const app: Application = express();
+const app = express();
+app.use(cors());
+
+
 
 // Middlewares
 app.use(express.json());
@@ -32,7 +23,7 @@ app.use("/company", companyRoutes);
 app.use("/admin", adminRoutes);
 
 // Middleware para manejo de errores
-app.use((err: any, req: Request, res: Response, next: NextFunction) => {
+app.use((err, req, res, next) => {
   console.error("Error:", err);
   res.status(err.status || 500).json({ error: err.message || "Error interno del servidor" });
 });
