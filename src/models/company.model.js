@@ -1,5 +1,5 @@
-// src/models/company.model.ts
-// import mongoose// from "mongoose";
+// src/models/company.model.js
+const mongoose = require("mongoose");
 
 const companySchema = new mongoose.Schema({
   imageUrl: { type: String, required: true },

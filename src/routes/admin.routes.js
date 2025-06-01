@@ -1,12 +1,11 @@
-// src/routes/admin.routes.ts
-// import { Router, Request, Response, NextFunction }// from "express";
-// import bcrypt// from "bcrypt";
-// import jwt, { JwtPayload }// from "jsonwebtoken";
-// import dotenv// from "dotenv";
-// import Admin, { IAdmin }// from "../models/Admin";
+const express = require("express");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+const dotenv = require("dotenv");
+const Admin = require("../models/Admin");
 
 dotenv.config();
-const router = Router();
+const router = express.Router();
 const SALT_ROUNDS = 10;
 
 /* -------------------------------------------------
@@ -25,17 +24,11 @@ ensureDefaultAdmin().catch(console.error);
 /* -------------------------------------------------
    Utilidades
 --------------------------------------------------*/
-const asyncHandler =
-  (fn: (req: Request, res: Response, next: NextFunction) => Promise<any>) =>
-  (req: Request, res: Response, next: NextFunction) =>
-    Promise.resolve(fn(req, res, next)).catch(next);
-
-interface AuthRequest extends Request {
-  adminId?: string;
-}
+const asyncHandler = (fn) => (req, res, next) =>
+  Promise.resolve(fn(req, res, next)).catch(next);
 
 /** Middleware JWT */
-const auth = asyncHandler(async (req: AuthRequest, res, next) => {
+const auth = asyncHandler(async (req, res, next) => {
   const header = req.headers.authorization || "";
   const token = header.split(" ")[1];
   if (!token) return res.status(401).json({ error: "Token requerido" });
@@ -44,7 +37,7 @@ const auth = asyncHandler(async (req: AuthRequest, res, next) => {
     const decoded = jwt.verify(
       token,
       process.env.JWT_SECRET || "secret"
-    ) as JwtPayload;
+    );
     req.adminId = decoded.id;
     next();
   } catch {
@@ -57,7 +50,7 @@ const auth = asyncHandler(async (req: AuthRequest, res, next) => {
 --------------------------------------------------*/
 router.post(
   "/login",
-  asyncHandler(async (req: Request, res: Response) => {
+  asyncHandler(async (req, res) => {
     const { userId, password } = req.body;
     const admin = await Admin.findOne({ userId });
     if (!admin) return res.status(401).json({ error: "Credenciales inválidas" });
@@ -80,7 +73,7 @@ router.post(
 router.get(
   "/",
   auth,
-  asyncHandler(async (_req: AuthRequest, res) => {
+  asyncHandler(async (_req, res) => {
     const admins = await Admin.find().select("-password");
     res.json(admins);
   })
@@ -90,7 +83,7 @@ router.get(
 router.post(
   "/",
   auth,
-  asyncHandler(async (req: AuthRequest, res) => {
+  asyncHandler(async (req, res) => {
     const { userId, password } = req.body;
     if (!userId || !password)
       return res.status(400).json({ error: "userId y password son requeridos" });
@@ -108,12 +101,12 @@ router.post(
 router.put(
   "/:id",
   auth,
-  asyncHandler(async (req: AuthRequest, res) => {
+  asyncHandler(async (req, res) => {
     const { id } = req.params;
     if (id === req.adminId)
       return res.status(403).json({ error: "No puedes modificar tu propio usuario activo" });
 
-    const updates: Partial<IAdmin> = {};
+    const updates = {};
     if (req.body.userId) updates.userId = req.body.userId;
     if (req.body.password) updates.password = await bcrypt.hash(req.body.password, SALT_ROUNDS);
 
@@ -128,7 +121,7 @@ router.put(
 router.delete(
   "/:id",
   auth,
-  asyncHandler(async (req: AuthRequest, res) => {
+  asyncHandler(async (req, res) => {
     const { id } = req.params;
     if (id === req.adminId)
       return res.status(403).json({ error: "No puedes eliminar tu propio usuario activo" });

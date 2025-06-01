@@ -1,12 +1,21 @@
-const express = require('express');
-const cors = require('cors');
-const dotenv = require('dotenv');
+// src/server.js
+const express = require("express");
+const cors = require("cors");
+const dotenv = require("dotenv");
+const mongoose = require("mongoose");
+
+// Importa las rutas (asegúrate de que los archivos existan en las rutas indicadas)
+const emailRoutes = require("./routes/email.routes");
+const storeLocationRoutes = require("./routes/storeLocation.routes");
+const phoneRoutes = require("./routes/phones.routes");
+const brandRoutes = require("./routes/brand.routes");
+const carouselRoutes = require("./routes/carousel.routes");
+const companyRoutes = require("./routes/company.routes");
+const adminRoutes = require("./routes/admin.routes");
+
 dotenv.config();
 
 const app = express();
-app.use(cors());
-
-
 
 // Middlewares
 app.use(express.json());

@@ -1,5 +1,4 @@
-// src/models/phones.model.ts
-// import mongoose// from "mongoose";
+const mongoose = require("mongoose");
 
 const phoneSchema = new mongoose.Schema({
   brand: { type: String, required: true },

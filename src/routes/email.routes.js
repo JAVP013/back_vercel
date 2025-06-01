@@ -1,17 +1,14 @@
-// src/routes/email.routes.ts
-// import { Router, Request, Response, NextFunction }// from "express";
-// import multer// from "multer";
-// import * as nodemailer// from "nodemailer";
-// import dotenv// from "dotenv";
+const express = require("express");
+const multer = require("multer");
+const nodemailer = require("nodemailer");
+const dotenv = require("dotenv");
 
 dotenv.config();
 
-const router = Router();
+const router = express.Router();
 const upload = multer({ storage: multer.memoryStorage() });
 
-const asyncHandler = (
-  fn: (req: Request, res: Response, next: NextFunction) => Promise<any>
-) => (req: Request, res: Response, next: NextFunction) =>
+const asyncHandler = (fn) => (req, res, next) =>
   Promise.resolve(fn(req, res, next)).catch(next);
 
 router.post(
@@ -20,7 +17,7 @@ router.post(
     { name: "pdf1", maxCount: 1 },
     { name: "pdf2", maxCount: 1 }
   ]),
-  asyncHandler(async (req: Request, res: Response) => {
+  asyncHandler(async (req, res) => {
     try {
       // Obtener la fecha actual
       const currentDate = new Date().toLocaleDateString();
@@ -55,7 +52,7 @@ router.post(
         }
       });
 
-      const mailOptions: nodemailer.SendMailOptions = {
+      const mailOptions = {
         from: process.env.EMAIL_USER,
         to: fixedEmail,
         subject,
@@ -64,7 +61,7 @@ router.post(
 
       // Preparar adjuntos
       const attachments = [];
-      const files = req.files as { [fieldname: string]: Express.Multer.File[] };
+      const files = req.files;
 
       if (files && files.pdf1 && files.pdf1.length > 0) {
         attachments.push({

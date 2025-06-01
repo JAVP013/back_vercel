@@ -1,4 +1,4 @@
-// import mongoose// from "mongoose";
+const mongoose = require("mongoose");
 
 const storeLocationSchema = new mongoose.Schema({
   address: { type: String, required: true },

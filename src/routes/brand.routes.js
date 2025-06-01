@@ -1,19 +1,16 @@
-// src/routes/brand.routes.ts
-// import { Router, Request, Response, NextFunction }// from "express";
-// import Brand// from "../models/brand.model";
+const express = require("express");
+const Brand = require("../models/brand.model");
 
-const router = Router();
+const router = express.Router();
 
 // Wrapper para funciones async
-const asyncHandler = (
-  fn: (req: Request, res: Response, next: NextFunction) => Promise<any>
-) => (req: Request, res: Response, next: NextFunction) =>
+const asyncHandler = (fn) => (req, res, next) =>
   Promise.resolve(fn(req, res, next)).catch(next);
 
 // GET /brand - Retorna el primer (o único) documento de Brand
 router.get(
   "/",
-  asyncHandler(async (req: Request, res: Response) => {
+  asyncHandler(async (req, res) => {
     const brand = await Brand.findOne({});
     if (!brand) {
       return res.status(404).json({ error: "Brand not found" });
@@ -25,7 +22,7 @@ router.get(
 // Ruta para actualizar el logo (marca)
 router.put(
   "/",
-  asyncHandler(async (req: Request, res: Response): Promise<void> => {
+  asyncHandler(async (req, res) => {
     const { logoUrl } = req.body;
     if (!logoUrl) {
       res.status(400).json({ error: "Falta logoUrl" });
@@ -43,4 +40,5 @@ router.put(
     res.json(brand);
   })
 );
+
 module.exports = router;

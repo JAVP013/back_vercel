@@ -1,28 +1,25 @@
-// src/routes/phones.routes.ts
-// import { Router, Request, Response, NextFunction }// from "express";
-// import Phone// from "../models/phones.model"; // Asegúrate de que la ruta y el nombre coincidan
+const express = require("express");
+const Phone = require("../models/phones.model"); // Asegúrate de que la ruta y el nombre coincidan
 
-const router = Router();
+const router = express.Router();
 
 // Wrapper para manejar funciones async y capturar errores
-const asyncHandler = (
-  fn: (req: Request, res: Response, next: NextFunction) => Promise<any>
-) => (req: Request, res: Response, next: NextFunction) =>
+const asyncHandler = (fn) => (req, res, next) =>
   Promise.resolve(fn(req, res, next)).catch(next);
 
 // Obtener todos los celulares
 router.get(
   "/",
-  asyncHandler(async (req: Request, res: Response): Promise<void> => {
+  asyncHandler(async (req, res) => {
     const phones = await Phone.find();
     res.json(phones);
   })
 );
 
 // Obtener un celular por ID
-router.get<{ id: string }>(
+router.get(
   "/:id",
-  asyncHandler(async (req, res): Promise<void> => {
+  asyncHandler(async (req, res) => {
     const phone = await Phone.findById(req.params.id);
     if (!phone) {
       res.status(404).json({ error: "Phone not found" });
@@ -35,7 +32,7 @@ router.get<{ id: string }>(
 // Crear un nuevo celular
 router.post(
   "/",
-  asyncHandler(async (req: Request, res: Response): Promise<void> => {
+  asyncHandler(async (req, res) => {
     const newPhone = new Phone(req.body);
     const savedPhone = await newPhone.save();
     res.status(201).json(savedPhone);
@@ -43,9 +40,9 @@ router.post(
 );
 
 // Actualizar un celular
-router.put<{ id: string }>(
+router.put(
   "/:id",
-  asyncHandler(async (req, res): Promise<void> => {
+  asyncHandler(async (req, res) => {
     const updatedPhone = await Phone.findByIdAndUpdate(
       req.params.id,
       req.body,
@@ -60,9 +57,9 @@ router.put<{ id: string }>(
 );
 
 // Eliminar un celular
-router.delete<{ id: string }>(
+router.delete(
   "/:id",
-  asyncHandler(async (req, res): Promise<void> => {
+  asyncHandler(async (req, res) => {
     const deletedPhone = await Phone.findByIdAndDelete(req.params.id);
     if (!deletedPhone) {
       res.status(404).json({ error: "Phone not found" });

@@ -1,6 +1,6 @@
-// import mongoose// from "mongoose";
-// import dotenv// from "dotenv";
-// import StoreLocation// from "./models/storeLocation.model";
+const mongoose = require("mongoose");
+const dotenv = require("dotenv");
+const StoreLocation = require("./models/storeLocation.model");
 
 dotenv.config();
 

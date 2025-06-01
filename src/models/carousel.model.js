@@ -1,5 +1,5 @@
-// src/models/carousel.model.ts
-// import mongoose// from "mongoose";
+// src/models/carousel.model.js
+const mongoose = require("mongoose");
 
 const carouselSchema = new mongoose.Schema({
   imageUrl: { type: String, required: true },

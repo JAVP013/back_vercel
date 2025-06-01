@@ -1,19 +1,16 @@
-// src/routes/carousel.routes.ts
-// import { Router, Request, Response, NextFunction }// from "express";
-// import Carousel// from "../models/carousel.model";
+const express = require("express");
+const Carousel = require("../models/carousel.model");
 
-const router = Router();
+const router = express.Router();
 
 // Helper para async/await
-const asyncHandler = (
-  fn: (req: Request, res: Response, next: NextFunction) => Promise<any>
-) => (req: Request, res: Response, next: NextFunction) =>
+const asyncHandler = (fn) => (req, res, next) =>
   Promise.resolve(fn(req, res, next)).catch(next);
 
 // GET /carousel - Obtener todas las imágenes del carrusel
 router.get(
   "/",
-  asyncHandler(async (req: Request, res: Response) => {
+  asyncHandler(async (req, res) => {
     const images = await Carousel.find();
     res.json(images);
   })
@@ -22,7 +19,7 @@ router.get(
 // POST /carousel - Insertar una nueva imagen en el carrusel
 router.post(
   "/",
-  asyncHandler(async (req: Request, res: Response): Promise<void> => {
+  asyncHandler(async (req, res) => {
     const { imageUrl, caption } = req.body;
     if (!imageUrl) {
       res.status(400).json({ error: "Falta imageUrl" });
@@ -37,7 +34,7 @@ router.post(
 // PUT /carousel/:id - Actualizar una imagen del carrusel por ID
 router.put(
   "/:id",
-  asyncHandler(async (req: Request, res: Response): Promise<void> => {
+  asyncHandler(async (req, res) => {
     const { imageUrl } = req.body;
     if (!imageUrl) {
       res.status(400).json({ error: "Falta imageUrl" });
@@ -59,7 +56,7 @@ router.put(
 // DELETE /carousel/:id - Eliminar una imagen del carrusel por ID
 router.delete(
   "/:id",
-  asyncHandler(async (req: Request, res: Response): Promise<void> => {
+  asyncHandler(async (req, res) => {
     const deletedImage = await Carousel.findByIdAndDelete(req.params.id);
     if (!deletedImage) {
       res.status(404).json({ error: "Imagen del carrusel no encontrada" });

@@ -1,14 +1,10 @@
-// src/models/Admin.ts
-// import mongoose, { Schema, Document }// from "mongoose";
+// src/models/Admin.js
+const mongoose = require("mongoose");
 
-// export interface IAdmin extends Document {
-  userId: string;
-  password: string;
-}
-
-const AdminSchema: Schema = new Schema({
+const AdminSchema = new mongoose.Schema({
   userId: { type: String, required: true, unique: true },
   password: { type: String, required: true }
 });
 
-module.exports = mongoose.model<IAdmin>("Admin", AdminSchema);
+const Admin = mongoose.model("Admin", AdminSchema);
+module.exports = Admin;

@@ -1,5 +1,5 @@
-// src/models/brand.model.ts
-// import mongoose// from "mongoose";
+// src/models/brand.model.js
+const mongoose = require("mongoose");
 
 const brandSchema = new mongoose.Schema({
   logoUrl: { type: String, required: true },

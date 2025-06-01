@@ -1,19 +1,16 @@
-// src/routes/storeLocation.routes.ts
-// import { Router, Request, Response, NextFunction }// from "express";
-// import StoreLocation// from "../models/storeLocation.model";
+const express = require("express");
+const StoreLocation = require("../models/storeLocation.model");
 
-const router = Router();
+const router = express.Router();
 
 // Wrapper para funciones async
-const asyncHandler = (
-  fn: (req: Request, res: Response, next: NextFunction) => Promise<any>
-) => (req: Request, res: Response, next: NextFunction) =>
+const asyncHandler = (fn) => (req, res, next) =>
   Promise.resolve(fn(req, res, next)).catch(next);
 
 // GET /store-location - Obtener todas las sucursales
 router.get(
   "/",
-  asyncHandler(async (_req: Request, res: Response): Promise<void> => {
+  asyncHandler(async (_req, res) => {
     const locations = await StoreLocation.find();
     res.json(locations);
   })
@@ -22,7 +19,7 @@ router.get(
 // POST /store-location - Crear una nueva sucursal
 router.post(
   "/",
-  asyncHandler(async (req: Request, res: Response): Promise<void> => {
+  asyncHandler(async (req, res) => {
     const { address, latitude, longitude, branchName } = req.body;
 
     if (!address || latitude === undefined || longitude === undefined || !branchName) {
@@ -38,7 +35,7 @@ router.post(
 // PUT /store-location/:id - Actualizar una sucursal por ID
 router.put(
   "/:id",
-  asyncHandler(async (req: Request, res: Response): Promise<void> => {
+  asyncHandler(async (req, res) => {
     const { id } = req.params;
     const { address, latitude, longitude, branchName } = req.body;
 
@@ -65,7 +62,7 @@ router.put(
 // DELETE /store-location/:id - Eliminar una sucursal por ID
 router.delete(
   "/:id",
-  asyncHandler(async (req: Request, res: Response): Promise<void> => {
+  asyncHandler(async (req, res) => {
     const { id } = req.params;
 
     const deleted = await StoreLocation.findByIdAndDelete(id);
